@@ -8,6 +8,7 @@ private:
 	int deathtime;
 	int size;
 	std::vector<Worldpoint> particals;
+	Sound sound; // sound for explosion
 public:
 	Explosion(Vector3 position, Vector3 velocity, int size, int deathtime);
 	~Explosion();

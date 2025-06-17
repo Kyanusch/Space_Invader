@@ -3,10 +3,10 @@
 
 namespace Soundmanager{
 	struct soundSet {
-		Sound explosion;
-		Sound laserS;
-		Sound laserM;
-		Sound laserL;
+		Wave explosion;
+		Wave laserS;
+		Wave laserM;
+		Wave laserL;
 	};
 	void load();
 	void unload();

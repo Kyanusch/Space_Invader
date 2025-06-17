@@ -13,7 +13,7 @@
 int main() {
     const int screenWidth = 2160;
     const int screenHeight = 1080;
-
+	std::cout << "Space Invaders 3D" << std::endl;
     InitWindow(screenWidth, screenHeight, "Space Invaders 3D");
     ToggleBorderlessWindowed();
     Soundmanager::initialize();

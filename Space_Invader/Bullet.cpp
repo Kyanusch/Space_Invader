@@ -1,6 +1,8 @@
 #include "Bullet.h"
 
 Bullet::Bullet(Vector3 position, Vector3 velocity, Entity* owner) : Projectile(position, velocity,1,0,100, owner){
+	Sound sound = LoadSoundFromWave(Soundmanager::sounds.laserS);
+	PlaySound(sound);
 }
 Bullet::~Bullet() = default;
 void Bullet::draw() const{

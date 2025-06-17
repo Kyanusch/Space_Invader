@@ -58,7 +58,6 @@ bool Player::CanShoot() {
 }
 
 Bullet Player::Shoot() const {
-    PlaySound(Soundmanager::sounds.laserS);
     return Bullet(getPosition(), {0.0f, 0.0f, 5.0f}, getThisEntity());
 }
 
