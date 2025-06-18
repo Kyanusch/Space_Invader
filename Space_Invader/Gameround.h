@@ -43,6 +43,7 @@ public:
 	void Update();
 	void Draw();
 	Player* getPlayer();
+	double playerDeathTime = 0; // time when player died
 	Gameround* getThis();
 	void spawnAsteroid();
 };

@@ -23,7 +23,7 @@ bool Gameround::sortZ(const std::shared_ptr<Entity>& e1, const std::shared_ptr<E
 }
 
 void Gameround::Update() {
-    updatePlayermechanics();
+	if (!player->getEnableDelete()) updatePlayermechanics(); //update player mechanics if player is not dead
     
     spawnAsteroid(); 
 
@@ -52,15 +52,21 @@ void Gameround::Update() {
                 }
             }
             //collision Player with Asteroid
-            if (auto asteroid_ptr = std::dynamic_pointer_cast<Asteroid>(entities[i])) { 
-                if (asteroid_ptr->getPosition().z < player->getHitboxradius() + player->getPosition().z && asteroid_ptr->getPosition().z > player->getPosition().z - player->getHitboxradius()) {
-                    if (CheckCollisionCircles({ player->getPosition().x, player->getPosition().y }, player->getHitboxradius(), { asteroid_ptr->getPosition().x, asteroid_ptr->getPosition().y }, asteroid_ptr->getHitboxradius())) {
-                        auto eVelocity = (virtualCamera::sVector3{ asteroid_ptr->getVelocity() } + virtualCamera::sVector3{ player->getVelocity()}) /2;     //explosion velocity
-                        entities.push_back(std::make_shared<Explosion>(Explosion(asteroid_ptr->getPosition(),eVelocity.vec , 10, 220)));    //creat Explosion
-                        player->damage(asteroid_ptr->getHealth());     //damage player
-                        asteroid_ptr->enableDeleteEntity();     //deleting astroind after collision with player
+			if (!player->getEnableDelete()) { //only check for collision if player is not dead
+                if (auto asteroid_ptr = std::dynamic_pointer_cast<Asteroid>(entities[i])) {
+                    if (asteroid_ptr->getPosition().z < player->getHitboxradius() + player->getPosition().z && asteroid_ptr->getPosition().z > player->getPosition().z - player->getHitboxradius()) {
+                        if (CheckCollisionCircles({ player->getPosition().x, player->getPosition().y }, player->getHitboxradius(), { asteroid_ptr->getPosition().x, asteroid_ptr->getPosition().y }, asteroid_ptr->getHitboxradius())) {
+                            auto eVelocity = (virtualCamera::sVector3{ asteroid_ptr->getVelocity() } + virtualCamera::sVector3{ player->getVelocity() }) / 2;     //explosion velocity
+                            entities.push_back(std::make_shared<Explosion>(Explosion(asteroid_ptr->getPosition(), eVelocity.vec, 10, 220)));    //creat Explosion
+                            player->damage(asteroid_ptr->getHealth());     //damage player
+                            asteroid_ptr->enableDeleteEntity();     //deleting astroind after collision with player
+                        }
                     }
                 }
+                if (player->getEnableDelete()) { //if player is dead, create explosion
+					playerDeathTime = GetTime(); //set player death time
+                    entities.push_back(std::make_shared<Explosion>(Explosion(player->getPosition(), {0.0f,0.0f,0.0f}, 50, 880)));
+				}
             }
         }
     }
@@ -73,14 +79,17 @@ void Gameround::updatePlayermechanics() {//Player Mechanics
 }
 
 void Gameround::Draw() {
-    gridU.draw();
+	gridU.draw(); //draw grids
     gridD.draw();
     gridL.draw();
     gridR.draw();
-    for (auto e : entities) {
+	for (auto e : entities) {   //draw all entities
         e->draw();
     }
-    player->draw();
+	if (!player->getEnableDelete()) { //draw player if not dead
+        player->draw();
+    }
+    
 }
 
 Player* Gameround::getPlayer() {

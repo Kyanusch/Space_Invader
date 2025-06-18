@@ -163,7 +163,7 @@ void UI::drawMainMenu(gamestate& gamestatus) {
             gamestatus = scoreboard;
             break;
         case quit:
-            //gamestatus = quit;
+			gamestatus = quitgame;
             break;
         }
     }
@@ -233,4 +233,14 @@ void UI::drawScoreboard(gamestate& gamestatus) {
     if (IsKeyPressed(KEY_ENTER)) {
         gamestatus = mainmenu;
     }
+}
+
+bool UI::drawBlackoutScreen(double playerDeathTime) {
+    //draw black screen
+    double duration = 10.0;
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), { 0, 0, 0, (unsigned char)(255 * ((GetTime() - playerDeathTime) / duration)) });
+    if (GetTime() - playerDeathTime > duration) {
+        return true; // return true if blackout is finished
+    }
+    else return false;
 }

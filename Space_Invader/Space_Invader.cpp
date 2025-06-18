@@ -22,9 +22,10 @@ int main() {
     Gameround game(0, 100.0f);
     UI ui(game.getThis());
     UI::gamestate gamestatus = UI::mainmenu;
-    
+	bool programmRunning = true;
+
     //gameloop
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose() && programmRunning) {
         BeginDrawing();
         ClearBackground(BLACK);
         switch (gamestatus) {
@@ -38,8 +39,13 @@ int main() {
             if (IsKeyPressed(KEY_TAB)) gamestatus = UI::pause;
             game.Update();
             game.Draw();
-            if (game.getPlayer()->getEnableDelete()) DrawFPS(5, 50);
             ui.drawGameUI();
+            if (game.getPlayer()->getEnableDelete()) {
+				//TODO: UI::blackoutScreen (game.playerDeathTime)
+				if (ui.drawBlackoutScreen(game.playerDeathTime)) {
+					gamestatus = UI::gameover;
+				 }
+            }
             break;
         case UI::pause:
             if (IsKeyPressed(KEY_TAB)) gamestatus = UI::run;
@@ -47,6 +53,14 @@ int main() {
             ui.drawGameUI();
             ui.drawPausMenu(gamestatus);
             break;
+		case UI::gameover:
+            break;
+		case UI::resetGame:
+			// TODO: reset game state
+			break;
+        case UI::quitgame:
+			programmRunning = false; // Exit the game
+			break;
         }
         EndDrawing();
     }

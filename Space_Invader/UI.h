@@ -3,7 +3,7 @@
 #include "virtualCamera.h"
 #include "HighscoreManager.h"
 #include "Gameround.h"
-class UI{
+class UI {
 private:
 	Gameround* game;
 	void drawScore(Player* player);
@@ -33,6 +33,6 @@ public:
 	void drawPausMenu(gamestate& gamestatus);
 	void drawMainMenu(gamestate& gamestatus);
 	void drawScoreboard(gamestate& gamestatus);
+	bool drawBlackoutScreen(double playerDeathTime);
 	//void deathScene();
 };
-
