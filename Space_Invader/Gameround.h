@@ -20,7 +20,6 @@
 
 class Gameround{
 private:
-	float difficultie;
 	double lastAsteroidSpawnTime = 0;
 	bool CanSpawnAsteroid();
 	Player* player; 
@@ -38,12 +37,14 @@ private:
 
 	void updatePlayermechanics();
 public:
+	float difficultie;
 	Gameround(int score, float difficultie, std::string playername);
 	virtual ~Gameround();
 	void Update();
 	void Draw();
 	Player* getPlayer();
 	double playerDeathTime = 0; // time when player died
+	double levelUpTime = 0; // time when player leveled up
 	Gameround* getThis();
 	void spawnAsteroid();
 };

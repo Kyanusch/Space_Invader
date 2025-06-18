@@ -46,6 +46,7 @@ public:
 
 	int getHealth();
 	int getShield();
+	void setShield(int newShield);
 	virtual void damage(int damage);
 	int getExperience();
 	virtual void setExperience(int exp);

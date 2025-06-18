@@ -22,6 +22,7 @@ public:
 		run,
 		quitgame,
 		pause,
+		levelup,
 		mainmenu,
 		gameover,
 		scoreboard,
@@ -37,4 +38,5 @@ public:
 	bool drawBlackoutScreen(double playerDeathTime);
 	void drawGameOverScreen(gamestate& gamestatus);
 	std::string inputPlayernameScreen(std::string oldPlayername = "");
+	bool drawLevelUpScreen(double starttime);
 };

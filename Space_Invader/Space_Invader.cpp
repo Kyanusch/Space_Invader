@@ -23,6 +23,7 @@ int main() {
     UI ui(currentGame);
     UI::gamestate gamestatus = UI::mainmenu; 
 	bool programmRunning = true;
+	int score2LevelUp = 1000; // Score needed to level up, changes with each level
 
     //gameloop
     while (!WindowShouldClose() && programmRunning) {
@@ -40,7 +41,11 @@ int main() {
             currentGame->Update();
             currentGame->Draw();
             ui.drawGameUI();
-            if (currentGame->getPlayer()->getEnableDelete()) {
+            if (currentGame->getPlayer()->getScore() >= score2LevelUp) { // If the player has enough score to level up
+				currentGame->levelUpTime = GetTime(); // Set the level up time
+                gamestatus = UI::levelup; 
+            }
+			if (currentGame->getPlayer()->getEnableDelete()) { // If the player is dead, draw the blackout screen
 				if (ui.drawBlackoutScreen(currentGame->playerDeathTime)) {
 					gamestatus = UI::gameover;
 				 }
@@ -52,6 +57,16 @@ int main() {
             ui.drawGameUI();
             ui.drawPausMenu(gamestatus);
             break;
+		case UI::levelup:
+            currentGame->Draw();
+            ui.drawGameUI();
+            if (ui.drawLevelUpScreen(currentGame->levelUpTime)) {
+				currentGame->getPlayer()->setShield(100.0f); // Reset player's shield to 100 after level up
+				currentGame->difficultie += 10.0f; // Increase difficulty for the next level
+                score2LevelUp = 1.25*score2LevelUp + 1000; // Increase the score needed to level up for the next level
+                gamestatus = UI::run; // Continue the game after level up
+            }
+			break;
 		case UI::gameover:
             currentGame->Draw();
             ui.drawGameOverScreen(gamestatus);

@@ -82,6 +82,9 @@ int Entity::getHealth() {
 int Entity::getShield() {
 	return shield;
 }
+void Entity::setShield(int newShield) {
+	shield = newShield;
+}
 void Entity::damage(int damage) {
 	if (shield > 0) {
 		shield -= damage;

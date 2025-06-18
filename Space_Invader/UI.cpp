@@ -444,3 +444,114 @@ std::string UI::inputPlayernameScreen(std::string oldPlayername) {
 
     return playerName; // In case window is closed
 }
+
+bool UI::drawLevelUpScreen(double starttime) {
+    const int screenWidth = GetScreenWidth();
+    const int screenHeight = GetScreenHeight();
+    const double animationDuration = 1.5; // Total duration for all animations
+    const double holdDuration = 5.0; // Time to hold the level up screen after animations
+    const double timeElapsed = GetTime() - starttime;
+    
+    // Draw semi-transparent background
+    DrawRectangle(0, 0, screenWidth, screenHeight, { 0, 0, 0, 100 });
+
+    // Level Up Title with pulsing effect - same size as Game Over title
+    const char* levelUpText = "LEVEL UP!";
+    const int titleFontSize = 120; // Same as game over screen
+    int levelUpWidth = MeasureText(levelUpText, titleFontSize);
+    float pulseAmount = sinf(GetTime() * 7.0f) * 0.3f + 0.7f;
+    Color titleColor = {
+        static_cast<unsigned char>(YELLOW.r * pulseAmount),
+        static_cast<unsigned char>(YELLOW.g * pulseAmount),
+        static_cast<unsigned char>(YELLOW.b * pulseAmount),
+        255
+    };
+    DrawText(levelUpText, (screenWidth - levelUpWidth) / 2, screenHeight / 4, titleFontSize, titleColor);
+
+    // Panel dimensions - same as game over screen
+    const int panelWidth = 600;
+    const int panelHeight = 300;
+    const int panelX = (screenWidth - panelWidth) / 2;
+    const int panelY = (screenHeight - panelHeight) / 2;
+    const int fontSize = 40;
+    const int smallFontSize = 30;
+    const int lineSpacing = 60;
+
+    // Draw panel with fade-in animation
+    float panelAlpha = (float)fmin(1.0, timeElapsed * 2);
+    DrawRectangle(panelX, panelY, panelWidth, panelHeight, ColorAlpha(DARKGRAY, 0.9f * panelAlpha));
+    DrawRectangleLines(panelX, panelY, panelWidth, panelHeight, ColorAlpha(WHITE, panelAlpha));
+
+    // Stats animations
+    const int statsStartY = panelY + 40;
+    const double statDelay = animationDuration / 3;
+
+    // Score with animation
+    if (timeElapsed > statDelay * 0) {
+        float scoreAlpha = (float)fmin(1.0, (timeElapsed - statDelay * 0) * 2);
+        int score = game->getPlayer()->getScore();
+        const char* scoreLabel = "SCORE:";
+        std::string scoreValue = std::to_string(score);
+        
+        // Draw label on left and value on right
+        DrawText(scoreLabel, panelX + 30, statsStartY, fontSize, 
+                ColorAlpha(WHITE, scoreAlpha));
+        DrawText(scoreValue.c_str(), 
+                panelX + panelWidth - MeasureText(scoreValue.c_str(), fontSize) - 30,
+                statsStartY, fontSize, ColorAlpha(WHITE, scoreAlpha));
+    }
+
+    // Kill counts
+    Entity::killCounts kills = game->getPlayer()->getKillCounts();
+    const int killStatsY = statsStartY + lineSpacing;
+    
+    // Draw kills title
+    if (timeElapsed > statDelay * 1) {
+        float killsAlpha = (float)fmin(1.0, (timeElapsed - statDelay * 1) * 2);
+        const char* killsTitle = "KILLS:";
+        DrawText(killsTitle, panelX + 30, killStatsY, fontSize, 
+                ColorAlpha(WHITE, killsAlpha));
+    }
+
+    // Asteroids kills with animation
+    if (timeElapsed > statDelay * 1.5) {
+        float asteroidsAlpha = (float)fmin(1.0, (timeElapsed - statDelay * 1.5) * 2);
+        const char* asteroidsLabel = "Asteroids:";
+        std::string asteroidsValue = std::to_string(kills.killedAsteroids);
+        
+        DrawText(asteroidsLabel, panelX + 60, killStatsY + 40, smallFontSize,
+                ColorAlpha(LIGHTGRAY, asteroidsAlpha));
+        DrawText(asteroidsValue.c_str(),
+                panelX + panelWidth/2 + 50, killStatsY + 40, smallFontSize,
+                ColorAlpha(LIGHTGRAY, asteroidsAlpha));
+    }
+
+    // Enemy ships kills with animation
+    if (timeElapsed > statDelay * 2) {
+        float enemiesAlpha = (float)fmin(1.0, (timeElapsed - statDelay * 2) * 2);
+        const char* enemiesLabel = "Enemy Ships:";
+        std::string enemiesValue = std::to_string(kills.killedEnemies);
+        
+        DrawText(enemiesLabel, panelX + 60, killStatsY + 80, smallFontSize,
+                ColorAlpha(LIGHTGRAY, enemiesAlpha));
+        DrawText(enemiesValue.c_str(),
+                panelX + panelWidth/2 + 50, killStatsY + 80, smallFontSize,
+                ColorAlpha(LIGHTGRAY, enemiesAlpha));
+    }
+
+    // Total kills with animation
+    if (timeElapsed > statDelay * 2.5) {
+        float totalAlpha = (float)fmin(1.0, (timeElapsed - statDelay * 2.5) * 2);
+        const char* totalLabel = "Total:";
+        std::string totalValue = std::to_string(kills.killedAsteroids + kills.killedEnemies);
+        
+        DrawText(totalLabel, panelX + 60, killStatsY + 120, smallFontSize + 1,
+                ColorAlpha(WHITE, totalAlpha));
+        DrawText(totalValue.c_str(),
+                panelX + panelWidth/2 + 50, killStatsY + 120, smallFontSize,
+                ColorAlpha(WHITE, totalAlpha));
+    }
+
+    // Return true when all animations are complete
+    return timeElapsed >= animationDuration + holdDuration;
+}
