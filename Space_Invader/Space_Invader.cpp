@@ -18,10 +18,10 @@ int main() {
     ToggleBorderlessWindowed();
     Soundmanager::initialize();
     HighscoreManager::initialize();
-    HighscoreManager::addScore({ "first", GetRandomValue(100, 10000)});
-    Gameround game(0, 100.0f);
-    UI ui(game.getThis());
-    UI::gamestate gamestatus = UI::mainmenu;
+    //HighscoreManager::addScore({ "first", GetRandomValue(100, 10000)});
+	Gameround* currentGame = new Gameround(0, 100.0f, "");; // Pointer to the current game instance
+    UI ui(currentGame);
+    UI::gamestate gamestatus = UI::mainmenu; 
 	bool programmRunning = true;
 
     //gameloop
@@ -37,27 +37,33 @@ int main() {
             break;
         case UI::run:
             if (IsKeyPressed(KEY_TAB)) gamestatus = UI::pause;
-            game.Update();
-            game.Draw();
+            currentGame->Update();
+            currentGame->Draw();
             ui.drawGameUI();
-            if (game.getPlayer()->getEnableDelete()) {
-				//TODO: UI::blackoutScreen (game.playerDeathTime)
-				if (ui.drawBlackoutScreen(game.playerDeathTime)) {
+            if (currentGame->getPlayer()->getEnableDelete()) {
+				if (ui.drawBlackoutScreen(currentGame->playerDeathTime)) {
 					gamestatus = UI::gameover;
 				 }
             }
             break;
         case UI::pause:
             if (IsKeyPressed(KEY_TAB)) gamestatus = UI::run;
-            game.Draw();
+            currentGame->Draw();
             ui.drawGameUI();
             ui.drawPausMenu(gamestatus);
             break;
 		case UI::gameover:
+            currentGame->Draw();
+            ui.drawGameOverScreen(gamestatus);
             break;
-		case UI::resetGame:
-			// TODO: reset game state
-			break;
+        case UI::newGame: {
+            Gameround* oldGame = currentGame;
+			currentGame = new Gameround(0, 100.0f, ui.inputPlayernameScreen(oldGame->getPlayer()->name)); // Create a new game instance with the player's name
+            ui.changeGame(currentGame);
+            delete oldGame; // Clean up the old game instance
+            gamestatus = UI::run;
+            break;
+        }
         case UI::quitgame:
 			programmRunning = false; // Exit the game
 			break;

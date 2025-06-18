@@ -1,7 +1,7 @@
 #include "Worldpoint.h"
 
 Worldpoint::Worldpoint(Vector3 position, Vector3 velocity, Color color) : Entity(position, velocity, 1, 0, 0), color(color){}
-Worldpoint::Worldpoint(Vector3 position, Color color) : Entity(position, {0.0f,0.0f,0.0f}, 1, 0, 0), color(color) {
+Worldpoint::Worldpoint(Vector3 position, Color color) : Entity(position, {0.0f,0.0f,0.0f}, 1, 0, 0, WORLDPOINT), color(color) {
 	staticMode = true;
 }
 

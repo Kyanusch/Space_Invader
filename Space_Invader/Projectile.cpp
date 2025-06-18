@@ -1,7 +1,7 @@
 #include "Projectile.h"
 
 Projectile::Projectile(Vector3 position, Vector3 velocity,int health, int shield, int damage, Entity* owner,const char* hitsoundpath) :
-	Entity(position, velocity, health, shield, 0), damage(damage), owner(owner) {
+	Entity(position, velocity, health, shield, 0, PROJECTILE), damage(damage), owner(owner) {
 	if (hitsoundpath != nullptr) hitsound = LoadSound(hitsoundpath);
 }
 Projectile::~Projectile() {
@@ -11,6 +11,8 @@ Projectile::~Projectile() {
 void Projectile::doDamage(Entity& entity) {
 	bool ekilledbefor = entity.getEnableDelete();
 	entity.damage(damage);
-	if (ekilledbefor != entity.getEnableDelete()) owner->setExperience(owner->getExperience() + entity.getExperience());
+	if (ekilledbefor != entity.getEnableDelete()) {
+		owner->killEntity(entity); //if entity was killed, call killEntity function
+	}
 	enableDeleteEntity();
 }

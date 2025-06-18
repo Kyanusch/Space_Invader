@@ -5,7 +5,16 @@ Entity::Entity(Vector3 position, Vector3 velocity,int health, int shield, int ex
 	velocity(velocity),
 	health(health),
 	shield(shield),
-	experience(experience){}
+	experience(experience),
+	type(EntityType::DEFAULT){}
+
+Entity::Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience, EntityType type) :
+	position(position),
+	velocity(velocity),
+	health(health),
+	shield(shield),
+	experience(experience),
+	type(type){}
 
 Entity::~Entity() = default;
 
@@ -15,6 +24,17 @@ void Entity::enableDeleteEntity() {
 bool Entity::getEnableDelete() {
 	return enableDelete;
 }
+void Entity::killEntity(Entity& entity) {
+	setExperience(getExperience() + entity.getExperience());	//add experience for killing an entity
+	if (entity.getType() == EntityType::ASTEROID) {				//increase kill counts
+		kills.killedAsteroids++;
+	}
+	else if (entity.getType() == EntityType::ENEMY) {
+		kills.killedEnemies++;
+	}
+	entity.enableDeleteEntity(); //mark entity for deletion, if it is not already marked
+}
+
 Entity* Entity::getThisEntity() const{
 	return const_cast<Entity*>(this);
 }
@@ -81,4 +101,10 @@ void Entity::setExperience(int exp) {
 }
 float Entity::getHitboxradius() const {
 	return hitboxradius;
+}
+Entity::EntityType Entity::getType() const {
+	return type;
+}
+Entity::killCounts Entity::getKillCounts() {
+	return kills;
 }

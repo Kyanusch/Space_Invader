@@ -38,7 +38,7 @@ private:
 
 	void updatePlayermechanics();
 public:
-	Gameround(int score, float difficultie);
+	Gameround(int score, float difficultie, std::string playername);
 	virtual ~Gameround();
 	void Update();
 	void Draw();

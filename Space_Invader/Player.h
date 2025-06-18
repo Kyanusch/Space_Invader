@@ -3,13 +3,9 @@
 #include "Bullet.h"
 
 class Player : public Entity {
-private:
-    float speedfactor = 3;
-    float speedlimit = 5;
-    int score = 0;
-    double lastShotTime;
 public:
-    Player(Vector3 position, int score);
+    Player(Vector3 position, int score, std::string name);
+    const std::string name;
     double shootCooldown;
     void Update();       
     bool CanShoot();
@@ -18,6 +14,13 @@ public:
 
     void setExperience(int exp);
     int getScore();
-    void addScore(int s);
+    void addScore(int s); 
+    
+private:
+    float speedfactor = 3;
+    float speedlimit = 5;
+    int score = 0;
+    double lastShotTime;
 };
+
 

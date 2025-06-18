@@ -1,6 +1,6 @@
 #include "Gameround.h"
 
-Gameround::Gameround(int score, float difficultie) : player(new Player({ virtualCamera::worldWidth / 2, virtualCamera::worldHight / 2, 0.0f}, score)), difficultie(difficultie){
+Gameround::Gameround(int score, float difficultie, std::string playername) : player(new Player({ virtualCamera::worldWidth / 2, virtualCamera::worldHight / 2, 0.0f}, score, playername)), difficultie(difficultie){
     SetTargetFPS(180);
     virtualCamera::initialize({ virtualCamera::worldWidth/2,virtualCamera::worldHight/2,-250.0f }, { virtualCamera::worldWidth / 2, virtualCamera::worldHight / 2, 1000.0f }, { 0,1,0 }, 250.0f);
     /*entities.push_back(std::make_shared<Worldpoint>(Worldpoint({ 0.0f,0.0f,0.0f }, GREEN)));
@@ -33,7 +33,6 @@ void Gameround::Update() {
 
     for (size_t i = 0; i < entities.size(); i++) {
         if (entities[i]->getEnableDelete()) {
-            //player->addScore(entities[i]->getExperience());
             entities.erase(entities.begin() + i);
             i--;
         }

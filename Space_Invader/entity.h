@@ -5,19 +5,27 @@
 #include "Soundmanager.h"
 
 class Entity {
-private:
-	Vector3	position;
-	Vector3 velocity;
-	int health;
-	int shield;
-	int experience;
-	bool enableDelete = false;
 protected:
 	float hitboxradius = 0.0f;
-protected:
 	void updatePosition();
 public:
+	enum EntityType {
+		DEFAULT,
+		PLAYER,
+		ASTEROID,
+		ENEMY,
+		PROJECTILE,
+		EXPLOSION,
+		WORLDPOINT
+	};
+
+	typedef struct killCounts {
+		int killedAsteroids;
+		int killedEnemies;
+	} killCounts;
+
 	Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience);
+	Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience, EntityType type);
 	virtual ~Entity();
 	virtual void draw() const= 0;
 	virtual void Update() = 0;
@@ -41,9 +49,21 @@ public:
 	virtual void damage(int damage);
 	int getExperience();
 	virtual void setExperience(int exp);
+	killCounts getKillCounts();
 	float getHitboxradius() const;
 	
+	void killEntity(Entity& entity);
+	EntityType getType() const;
 	void enableDeleteEntity();
 	bool getEnableDelete();
+private:
+	Vector3	position;
+	Vector3 velocity;
+	int health;
+	int shield;
+	int experience;
+	bool enableDelete = false;
+	EntityType type;
+	killCounts kills = { 0,0 };
 };
 

@@ -2,7 +2,7 @@
 #include <iostream>
 //TO Do:	Velocity implementieren
 Asteroid::Asteroid(Vector3 position, int health, float speed) 
-	: Entity(position, {0,0,0}, health, 0, 100), size(health) {
+	: Entity(position, {0,0,0}, health, 0, 100, ASTEROID), size(health) {
 	generateRandomTarget();
 	auto pos = virtualCamera::sVector3(position);
 	auto trg = virtualCamera::sVector3(target);

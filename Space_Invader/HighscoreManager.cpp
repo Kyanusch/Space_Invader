@@ -68,6 +68,12 @@ namespace HighscoreManager {
     std::vector<score> getHighscores() {
         return highscores;
     }
+    int getHighestScore() {
+        if (!highscores.empty()) {
+            return highscores[0].value;
+        }
+        return 0; // Return 0 if there are no highscores
+	}
 
     void addScore(score newScore) {
         highscores.push_back(newScore);

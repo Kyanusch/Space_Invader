@@ -15,6 +15,7 @@ namespace HighscoreManager {
     void initialize();
     void deinitialize();
     std::vector<score> getHighscores();
+	int getHighestScore();
     void addScore(score newScore);
     void updateHighscores();
 

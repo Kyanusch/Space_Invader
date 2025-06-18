@@ -25,14 +25,16 @@ public:
 		mainmenu,
 		gameover,
 		scoreboard,
-		resetGame
+		newGame
 	};
 	UI(Gameround* game);
 	virtual ~UI();
+	bool changeGame(Gameround* newgame);
 	void drawGameUI();
 	void drawPausMenu(gamestate& gamestatus);
 	void drawMainMenu(gamestate& gamestatus);
 	void drawScoreboard(gamestate& gamestatus);
 	bool drawBlackoutScreen(double playerDeathTime);
-	//void deathScene();
+	void drawGameOverScreen(gamestate& gamestatus);
+	std::string inputPlayernameScreen(std::string oldPlayername = "");
 };

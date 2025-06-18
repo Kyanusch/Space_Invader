@@ -6,6 +6,14 @@ UI::UI(Gameround* game) : game(game), pauseMenuSelection(resume), mainMenuSelect
 UI::~UI() {
 }
 
+bool UI::changeGame(Gameround* newgame) {
+    if (newgame != nullptr) {
+        game = newgame;
+        return true;
+    }
+	return false;   //return false if newgame could not be set
+}
+
 void UI::drawGameUI() {
     auto player = game->getPlayer();
     drawBars(player);
@@ -13,7 +21,10 @@ void UI::drawGameUI() {
     
 }
 void UI::drawScore(Player* player) {
-    DrawText(TextFormat("score: %d", player->getScore()), 5, 5, 25, WHITE);
+    int fontsize = 25;
+    DrawText(TextFormat("score: %d", player->getScore()), 5, 5, fontsize, WHITE);
+	const char* playerName = player->name.c_str();
+	DrawText(playerName, GetScreenWidth() - MeasureText(playerName, fontsize) -5, 5, fontsize, WHITE);
 }
 
 void UI::drawBars(Player* player) {
@@ -157,7 +168,7 @@ void UI::drawMainMenu(gamestate& gamestatus) {
     if (IsKeyPressed(KEY_ENTER)) {
         switch (mainMenuSelection) {
         case start:
-            gamestatus = run;
+            gamestatus = newGame;
             break;
         case highscores:
             gamestatus = scoreboard;
@@ -237,10 +248,199 @@ void UI::drawScoreboard(gamestate& gamestatus) {
 
 bool UI::drawBlackoutScreen(double playerDeathTime) {
     //draw black screen
-    double duration = 10.0;
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), { 0, 0, 0, (unsigned char)(255 * ((GetTime() - playerDeathTime) / duration)) });
+    double duration = 4.0;
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), { 0, 0, 0, (unsigned char)(100 * ((GetTime() - playerDeathTime) / duration)) });
     if (GetTime() - playerDeathTime > duration) {
         return true; // return true if blackout is finished
     }
     else return false;
+}
+
+void UI::drawGameOverScreen(gamestate& gamestatus) {
+    const int screenWidth = GetScreenWidth();
+    const int screenHeight = GetScreenHeight();
+	//Background
+	DrawRectangle(0, 0, screenWidth, screenHeight, { 0, 0, 0, 100 }); // Semi-transparent black background
+
+    // Game Over Title
+    const char* gameOverText = "GAME OVER";
+    const int titleFontSize = 120;
+    int gameOverWidth = MeasureText(gameOverText, titleFontSize);
+    // Pulsating effect for the title
+    float pulseAmount = sinf(GetTime() * 7.0f) * 0.3f + 0.7f; // Creates a pulsing effect between 0.4 and 1.0 with sin function
+    Color gameOverColor = {
+        static_cast<unsigned char>(RED.r * pulseAmount),
+        static_cast<unsigned char>(RED.g * pulseAmount),
+        static_cast<unsigned char>(RED.b * pulseAmount),
+        255
+    };
+    DrawText(gameOverText, (screenWidth - gameOverWidth) / 2, screenHeight / 4, titleFontSize, gameOverColor);
+
+    // Stats panel
+    const int panelWidth = 600;
+    const int panelHeight = 400;
+    const int panelX = (screenWidth - panelWidth) / 2;
+    const int panelY = (screenHeight - panelHeight) / 2;
+    const int fontSize = 40;
+    const int smallFontSize = 30;
+    const int lineSpacing = 60;
+
+    // Draw semi-transparent panel background
+    DrawRectangle(panelX, panelY, panelWidth, panelHeight, ColorAlpha(DARKGRAY, 0.9f));
+    DrawRectangleLines(panelX, panelY, panelWidth, panelHeight, WHITE);
+
+    // Player name
+    std::string playerName = game->getPlayer()->name;
+    DrawText(playerName.c_str(), panelX + 30, panelY + 30, fontSize, WHITE);
+    DrawLine(panelX + 30, panelY + 80, panelX + panelWidth - 30, panelY + 80, GRAY);
+
+    // Score
+    int playerScore = game->getPlayer()->getScore();
+    std::string scoreText = "SCORE: " + std::to_string(playerScore);
+    DrawText(scoreText.c_str(), panelX + 30, panelY + 100, fontSize, WHITE);
+
+    // Check if it's a new highscore
+    if (HighscoreManager::getHighestScore() < playerScore) {
+        const char* newHighscoreText = "NEW HIGH SCORE!";
+        int highscoreWidth = MeasureText(newHighscoreText, smallFontSize);
+        DrawText(newHighscoreText, panelX + panelWidth - highscoreWidth - 30, 
+                panelY + 100, smallFontSize, YELLOW);
+    }
+
+    // Get kill counts
+    Entity::killCounts kills = game->getPlayer()->getKillCounts();
+    
+    // Draw kills statistics
+    const int killStatsY = panelY + 100 + lineSpacing;
+    const char* killsTitle = "KILLS:";
+    DrawText(killsTitle, panelX + 30, killStatsY, fontSize, WHITE);
+    
+    // Draw individual kill counts with smaller font and indent
+    const int killDetailsX = panelX + 60;
+    const int killDetailsSpacing = 40;
+    
+    // Asteroids kills
+    DrawText("Asteroids:", killDetailsX, killStatsY + killDetailsSpacing, smallFontSize, LIGHTGRAY);
+    DrawText(std::to_string(kills.killedAsteroids).c_str(), killDetailsX + panelWidth/2, killStatsY + killDetailsSpacing, smallFontSize, LIGHTGRAY);
+
+    // Enemy ships kills
+    DrawText("Enemy Ships:", killDetailsX, killStatsY + 2 * killDetailsSpacing, smallFontSize, LIGHTGRAY);
+    DrawText(std::to_string(kills.killedEnemies).c_str(), killDetailsX + panelWidth / 2, killStatsY + 2 * killDetailsSpacing, smallFontSize, LIGHTGRAY);
+
+    // Total kills
+    std::string totalKillsText = std::to_string(kills.killedAsteroids + kills.killedEnemies);
+    DrawText("Total:", killDetailsX, killStatsY + 3 * killDetailsSpacing, smallFontSize + 1, WHITE);
+    DrawText(totalKillsText.c_str(), killDetailsX + panelWidth / 2, killStatsY + 3 * killDetailsSpacing, smallFontSize, WHITE);
+
+    // Instructions
+    const char* pressEnterText = "Press ENTER to continue";
+    int enterWidth = MeasureText(pressEnterText, smallFontSize);
+    DrawText(pressEnterText, (screenWidth - enterWidth) / 2, 
+            panelY + panelHeight + 40, smallFontSize, GRAY);
+
+    // Handle input
+    if (IsKeyPressed(KEY_ENTER)) {
+		HighscoreManager::addScore({ game->getPlayer()->name, playerScore }); // Add score to highscore list
+        gamestatus = mainmenu;
+    }
+}
+
+std::string UI::inputPlayernameScreen(std::string oldPlayername) {
+    const int screenWidth = GetScreenWidth();
+    const int screenHeight = GetScreenHeight();
+    std::string playerName = oldPlayername;
+    const int maxLength = 12;
+    
+    // Panel dimensions
+    const int panelWidth = 600;
+    const int panelHeight = 300;
+    const int panelX = (screenWidth - panelWidth) / 2;
+    const int panelY = (screenHeight - panelHeight) / 2;
+    
+    // Font sizes
+    const int titleFontSize = 50;
+    const int inputFontSize = 40;
+    const int helpFontSize = 20;
+
+    // Title text
+    const char* titleText = "ENTER YOUR NAME";
+    int titleWidth = MeasureText(titleText, titleFontSize);
+
+    // Input field dimensions
+    const int inputFieldWidth = 400;
+    const int inputFieldHeight = 60;
+    const int inputFieldX = (screenWidth - inputFieldWidth) / 2;
+    const int inputFieldY = screenHeight / 2;
+
+    while (!WindowShouldClose()) {
+        // Handle input
+        int key = GetCharPressed();
+        while (key > 0) {
+            if ((key >= 32) && (key <= 125) && (playerName.length() < maxLength)) {
+                playerName += (char)key;
+            }
+            key = GetCharPressed();
+        }
+
+        // Handle backspace
+        if (IsKeyPressed(KEY_BACKSPACE) && !playerName.empty()) {
+            playerName.pop_back();
+        }
+
+        // Handle enter (confirm name)
+        if (IsKeyPressed(KEY_ENTER) && !playerName.empty()) {
+            return playerName;
+        }
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        // Draw semi-transparent background
+        DrawRectangle(0, 0, screenWidth, screenHeight, { 0, 0, 0, 100 });
+
+        // Draw panel
+        DrawRectangle(panelX, panelY, panelWidth, panelHeight, ColorAlpha(DARKGRAY, 0.9f));
+        DrawRectangleLines(panelX, panelY, panelWidth, panelHeight, WHITE);
+
+        // Draw title
+        DrawText(titleText, (screenWidth - titleWidth) / 2, panelY + 40, titleFontSize, WHITE);
+
+        // Draw input field background
+        DrawRectangle(inputFieldX, inputFieldY, inputFieldWidth, inputFieldHeight, GRAY);
+        DrawRectangleLines(inputFieldX, inputFieldY, inputFieldWidth, inputFieldHeight, WHITE);
+
+        // Draw input text (with cursor effect)
+        std::string displayText = playerName;
+        if (((int)(GetTime() * 2) % 2) == 0) { // Blinking cursor effect
+            displayText += "_";
+        }
+		else displayText += " "; // Add space if no cursor
+        int textWidth = MeasureText(displayText.c_str(), inputFontSize);
+        DrawText(displayText.c_str(), 
+                inputFieldX + (inputFieldWidth - textWidth) / 2,
+                inputFieldY + (inputFieldHeight - inputFontSize) / 2,
+                inputFontSize,
+                WHITE);
+
+        // Draw character count
+        std::string charCount = std::to_string(playerName.length()) + "/" + std::to_string(maxLength);
+        DrawText(charCount.c_str(),
+                inputFieldX + inputFieldWidth - MeasureText(charCount.c_str(), helpFontSize) - 10,
+                inputFieldY + inputFieldHeight + 5,
+                helpFontSize,
+                GRAY);
+
+        // Draw help text
+        const char* helpText = "Press ENTER to confirm | BACKSPACE to delete";
+        int helpWidth = MeasureText(helpText, helpFontSize);
+        DrawText(helpText,
+                (screenWidth - helpWidth) / 2,
+                panelY + panelHeight - 40,
+                helpFontSize,
+                LIGHTGRAY);
+
+        EndDrawing();
+    }
+
+    return playerName; // In case window is closed
 }

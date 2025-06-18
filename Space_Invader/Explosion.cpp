@@ -1,6 +1,6 @@
 #include "Explosion.h"
 
-Explosion::Explosion(Vector3 position, Vector3 velocity, int size, int deathtime) : Entity(position, velocity, 1, 0, 0), size(size), deathtime(deathtime) {
+Explosion::Explosion(Vector3 position, Vector3 velocity, int size, int deathtime) : Entity(position, velocity, 1, 0, 0, EXPLOSION), size(size), deathtime(deathtime) {
 	for (int i = 0; i < GetRandomValue(size, 2 * size); i++) {
 		auto vel = virtualCamera::sVector3(velocity) + virtualCamera::sVector3({ GetRandomValue(-10 * size,10 * size) / 20.0f, GetRandomValue(-10 * size,10 * size) / 20.0f , GetRandomValue(-10 * size,10 * size) / 20.0f });
 		Color rdmColor = RED;

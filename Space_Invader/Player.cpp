@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(Vector3 position, int score)
-    : Entity(position, {0,0,0}, 100, 100, 0), lastShotTime(0.0), shootCooldown(0.2), score(score) {
+Player::Player(Vector3 position, int score, std::string name)
+    : Entity(position, {0,0,0}, 100, 100, 0, PLAYER), lastShotTime(0.0), shootCooldown(0.2), score(score), name(name) {
     hitboxradius = 40;
 }
 
