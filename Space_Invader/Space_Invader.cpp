@@ -24,6 +24,7 @@ int main() {
     UI::gamestate gamestatus = UI::mainmenu; 
 	bool programmRunning = true;
 	int score2LevelUp = 1000; // Score needed to level up, changes with each level
+	int Level = 1; // Current level of the game
 
     //gameloop
     while (!WindowShouldClose() && programmRunning) {
@@ -61,9 +62,13 @@ int main() {
             currentGame->Draw();
             ui.drawGameUI();
             if (ui.drawLevelUpScreen(currentGame->levelUpTime)) {
-				currentGame->getPlayer()->setShield(100.0f); // Reset player's shield to 100 after level up
+				Level++; // Increase the level
+                currentGame->getPlayer()->setShield(100.0f); // Reset player's shield to 100 after level up
 				currentGame->difficultie += 10.0f; // Increase difficulty for the next level
-                score2LevelUp = 1.25*score2LevelUp + 1000; // Increase the score needed to level up for the next level
+                for (int i = 0; i < Level; i++) {
+                    currentGame->spawnEnemy(); // Spawn enemys when levelup
+                }
+                score2LevelUp = score2LevelUp + 1000*Level; // Increase the score needed to level up for the next level
                 gamestatus = UI::run; // Continue the game after level up
             }
 			break;
@@ -73,7 +78,9 @@ int main() {
             break;
         case UI::newGame: {
             Gameround* oldGame = currentGame;
-			currentGame = new Gameround(0, 100.0f, ui.inputPlayernameScreen(oldGame->getPlayer()->name)); // Create a new game instance with the player's name
+			currentGame = new Gameround(0, 10.0f, ui.inputPlayernameScreen(oldGame->getPlayer()->name)); // Create a new game instance with the player's name
+			currentGame->spawnEnemy(); // Spawn enemy at the start 
+            
             ui.changeGame(currentGame);
             delete oldGame; // Clean up the old game instance
             gamestatus = UI::run;

@@ -4,14 +4,13 @@
 
 namespace virtualCamera {
 	sVector3 position;	//camera position in 3D world
-	sVector3 forward;	//camera direction of forward 
+	sVector3 forward;	//camera direction of forward
 	sVector3 up;		//camera direction of up
 	sVector3 right;		//camera direction of right
 	float focalLenght;	//defines the zoom
-	
 
 	sVector3::sVector3() : vec({ 0,0,0 }) {}	//empty vector
-	sVector3::sVector3(Vector3 vector) : vec(vector){}
+	sVector3::sVector3(Vector3 vector) : vec(vector) {}
 	sVector3 sVector3::operator+(const sVector3& b) const { return sVector3({ vec.x + b.vec.x, vec.y + b.vec.y, vec.z + b.vec.z }); }		//vector addition
 	sVector3 sVector3::operator-(const sVector3& b) const { return sVector3({ vec.x - b.vec.x, vec.y - b.vec.y, vec.z - b.vec.z }); }		//vector substraction
 	sVector3 sVector3::operator*(float s) const { return sVector3({ vec.x * s, vec.y * s, vec.z * s }); }		//vector multiplication
@@ -54,10 +53,10 @@ namespace virtualCamera {
 			//throw std::runtime_error("Point is behind the camera");
 			//std::cout << "Point is behind the camera\n";
 		}
-		float x = -scalar(local, right) ;
-		float y = scalar(local, up) ;
-		Vector2 position2D = { (x / z) * focalLenght+ GetScreenWidth() / 2, (y / z) * focalLenght + GetScreenHeight() / 2};
-		return { position2D,distance, inView};
+		float x = -scalar(local, right);
+		float y = scalar(local, up);
+		Vector2 position2D = { (x / z) * focalLenght + GetScreenWidth() / 2, (y / z) * focalLenght + GetScreenHeight() / 2 };
+		return { position2D,distance, inView };
 	}
 
 	sVector3 rotatePointAroundAxis(const sVector3& pPoint, const Vector3& axis, float angleRadians) {

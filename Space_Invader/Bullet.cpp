@@ -1,26 +1,26 @@
 #include "Bullet.h"
 
-Bullet::Bullet(Vector3 position, Vector3 velocity, Entity* owner) : Projectile(position, velocity,1,0,100, owner){
-	Sound sound = LoadSoundFromWave(Soundmanager::sounds.laserS);
-	PlaySound(sound);
+Bullet::Bullet(Vector3 position, Vector3 velocity, Entity* owner, Color color) : Projectile(position, velocity, 1, 0, 100, owner), color(color) {
+	
+}
+Bullet::Bullet(Vector3 position, Vector3 velocity, int damage, Entity* owner, Color color) : Projectile(position, velocity, 1, 0, damage, owner), color(color) {
+	
 }
 Bullet::~Bullet() = default;
-void Bullet::draw() const{
-	//DrawEllipse(getPosition().x, getPosition().y + (50 / getPosition().z +1), 4 / getPosition().z, 10 / getPosition().z, RED);
-	//DrawEllipse(getPosition().x, getPosition().y, 4 / getPosition().z, 10 / getPosition().z, RED);
+void Bullet::draw() const {
 	virtualCamera::camResults results = virtualCamera::projectPoint(getPosition());
-	//results.position2D = { results.position2D.x + GetScreenWidth() / 2, results.position2D.y + GetScreenHeight() / 2 };
+	if (!results.inView) return; // Do not draw if not in view
 	float circleSize = 1000 / results.distance;
-	if (1000 / results.distance < 1.0f) circleSize = 1.0f;
-	DrawCircle(results.position2D.x, results.position2D.y, circleSize, RED);
+	if (1000 / results.distance < 1.0f) circleSize = 1.0f; // Ensure circle size is at least 1 pixel
+	DrawCircle(results.position2D.x, results.position2D.y, circleSize, color);
 }
-void Bullet::Update() { 
-	if (getPosition().z > 10000) {
-		Entity::enableDeleteEntity();
-	}
+void Bullet::Update() {
+	// if the bullet is out of bounds, enable delete
+	if (getPosition().x > virtualCamera::worldWidth || getPosition().x < 0) Entity::enableDeleteEntity();
+	else if (getPosition().y > virtualCamera::worldHight || getPosition().y < 0) Entity::enableDeleteEntity();
+	else if (getPosition().z > 10000 || getPosition().z < -250) Entity::enableDeleteEntity();
 	else {
 		updatePosition();
 		hitboxradius = 5;
 	}
-	
 }

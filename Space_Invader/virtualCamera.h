@@ -3,7 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 
-namespace virtualCamera{
+namespace virtualCamera {
 	const float worldWidth = 2000.0f;	//world width
 	const float worldHight = 1000.0f;	//World hight
 
@@ -28,7 +28,7 @@ namespace virtualCamera{
 	} camResults;
 
 	extern sVector3 position;	//camera position in 3D world
-	extern sVector3 forward;	//camera direction of forward 
+	extern sVector3 forward;	//camera direction of forward
 	extern sVector3 up;			//camera direction of up
 	extern sVector3 right;		//camera direction of right
 	extern float focalLenght;	//defines the zoom
@@ -37,4 +37,3 @@ namespace virtualCamera{
 	camResults projectPoint(const Vector3& point);
 	sVector3 rotatePointAroundAxis(const sVector3& pPoint, const Vector3& axis, float angleRadians);
 }
-

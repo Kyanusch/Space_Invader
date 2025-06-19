@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 
-namespace Soundmanager{
+namespace Soundmanager {
 	struct soundSet {
 		Wave explosion;
 		Wave laserS;
@@ -15,4 +15,3 @@ namespace Soundmanager{
 	void initialize();		//must be run befor gameround start!
 	void deinitialize();	//must be run after all
 };
-

@@ -1,8 +1,8 @@
 #include "Asteroid.h"
 #include <iostream>
 //TO Do:	Velocity implementieren
-Asteroid::Asteroid(Vector3 position, int health, float speed) 
-	: Entity(position, {0,0,0}, health, 0, 100, ASTEROID), size(health) {
+Asteroid::Asteroid(Vector3 position, int health, float speed)
+	: Entity(position, { 0,0,0 }, health, 0, 10, ASTEROID), size(health) {
 	generateRandomTarget();
 	auto pos = virtualCamera::sVector3(position);
 	auto trg = virtualCamera::sVector3(target);
@@ -16,7 +16,7 @@ Asteroid::Asteroid(Vector3 position, int health, float speed)
 Asteroid::~Asteroid() = default;
 
 void Asteroid::Update() {
-	if (getPosition().z < 50.0f - virtualCamera::focalLenght ) {
+	if (getPosition().z < 50.0f - virtualCamera::focalLenght) {
 		Entity::enableDeleteEntity();
 	}
 	setPosition_X(getPosition().x + getVelocity().x);
@@ -28,21 +28,21 @@ void Asteroid::Update() {
 }
 
 void Asteroid::generateRandomTarget() {
-	target = {(float)GetRandomValue(0,virtualCamera::worldWidth),(float)GetRandomValue(0,virtualCamera::worldHight),0};
+	target = { (float)GetRandomValue(0,virtualCamera::worldWidth),(float)GetRandomValue(0,virtualCamera::worldHight),0 };
 }
-unsigned char Asteroid::transparency() const{	
+unsigned char Asteroid::transparency() const {
 	if (getPosition().z > 7000) {				//color fade in
-		return (10000-getPosition().z)/3000 * 255;
+		return (10000 - getPosition().z) / 3000 * 255;
 	}
-	else if (getPosition().z -100 < 30) {		//color fade out
-		return ((getPosition().z +100) / 30) * 255;
+	else if (getPosition().z - 100 < 30) {		//color fade out
+		return ((getPosition().z + 100) / 30) * 255;
 	}
 	else return 255;
 }
 
 void Asteroid::draw() const {
-	//Rotation			 
-	virtualCamera::sVector3 Points3[4] = {points[0], points[1] ,points[2] ,points[3]};
+	//Rotation
+	virtualCamera::sVector3 Points3[4] = { points[0], points[1] ,points[2] ,points[3] };
 	for (auto& p : Points3) {
 		p = virtualCamera::rotatePointAroundAxis(p, spinAxis, rotation);
 	}
@@ -50,10 +50,10 @@ void Asteroid::draw() const {
 	Vector2 Points2[4];
 	auto pos = virtualCamera::sVector3(getPosition());
 	for (int i = 0; i < 4; i++) {
-		Points3[i] = Points3[i]*size + pos;
+		Points3[i] = Points3[i] * size + pos;
 		Points2[i] = virtualCamera::projectPoint(Points3[i].vec).position2D;
 	}
-	
+
 	Color color = { 138,124, cblue,transparency() };
 	DrawLine(Points2[0].x, Points2[0].y, Points2[1].x, Points2[1].y, color);
 	DrawLine(Points2[1].x, Points2[1].y, Points2[2].x, Points2[2].y, color);

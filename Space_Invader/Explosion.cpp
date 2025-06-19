@@ -12,11 +12,10 @@ Explosion::Explosion(Vector3 position, Vector3 velocity, int size, int deathtime
 		case 5: rdmColor = { 255, 255, 224, 200 }; break; // Rauchiges Gelb (transluzent)
 		}
 		particals.push_back(Worldpoint(position, vel.vec, rdmColor));
-
 	}
 	sound = LoadSoundFromWave(Soundmanager::sounds.explosion);
 	auto results = virtualCamera::projectPoint(getPosition());	// get relative position of explosion to camera
-	SetSoundVolume(sound, 1/ (1 + results.distance/100) ); // set sound volume based on distance and size
+	SetSoundVolume(sound, 1 / (1 + results.distance / 100)); // set sound volume based on distance and size
 	SetSoundPan(sound, ((virtualCamera::worldWidth - results.position2D.x) / virtualCamera::worldWidth)); // set sound pan based on relative position
 	PlaySound(sound);
 }

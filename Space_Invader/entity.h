@@ -27,7 +27,7 @@ public:
 	Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience);
 	Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience, EntityType type);
 	virtual ~Entity();
-	virtual void draw() const= 0;
+	virtual void draw() const = 0;
 	virtual void Update() = 0;
 	Entity* getThisEntity() const;
 	//Position
@@ -36,7 +36,7 @@ public:
 	void setPosition_X(float x);
 	void setPosition_Y(float y);
 	void setPosition_Z(float z);
-	
+
 	//velocity
 	Vector3 getVelocity() const;
 	void setVelosity(Vector3 newvelocity);
@@ -52,7 +52,7 @@ public:
 	virtual void setExperience(int exp);
 	killCounts getKillCounts();
 	float getHitboxradius() const;
-	
+
 	void killEntity(Entity& entity);
 	EntityType getType() const;
 	void enableDeleteEntity();
@@ -67,4 +67,3 @@ private:
 	EntityType type;
 	killCounts kills = { 0,0 };
 };
-

@@ -2,7 +2,7 @@
 #include "entity.h"
 #include "Worldpoint.h"
 #include <vector>
-class Explosion : public Entity{
+class Explosion : public Entity {
 private:
 	int lifetime = 0;
 	int deathtime;
@@ -15,4 +15,3 @@ public:
 	void Update() override;
 	void draw() const override;
 };
-

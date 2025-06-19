@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include <vector>
 #include "virtualCamera.h"
-class Gridboarder{
+class Gridboarder {
 private:
 	//Vector3 plane;
 	std::vector<std::vector<Vector3>> matrix;
@@ -19,4 +19,3 @@ public:
 	Gridboarder(Vector3 Origin, Vector3 dX, Vector3 dY, int lx, int ly);
 	void draw() const;
 };
-

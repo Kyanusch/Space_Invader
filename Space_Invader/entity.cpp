@@ -1,12 +1,13 @@
 #include "Entity.h"
 
-Entity::Entity(Vector3 position, Vector3 velocity,int health, int shield, int experience) :
+Entity::Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience) :
 	position(position),
 	velocity(velocity),
 	health(health),
 	shield(shield),
 	experience(experience),
-	type(EntityType::DEFAULT){}
+	type(EntityType::DEFAULT) {
+}
 
 Entity::Entity(Vector3 position, Vector3 velocity, int health, int shield, int experience, EntityType type) :
 	position(position),
@@ -14,7 +15,8 @@ Entity::Entity(Vector3 position, Vector3 velocity, int health, int shield, int e
 	health(health),
 	shield(shield),
 	experience(experience),
-	type(type){}
+	type(type) {
+}
 
 Entity::~Entity() = default;
 
@@ -25,7 +27,7 @@ bool Entity::getEnableDelete() {
 	return enableDelete;
 }
 void Entity::killEntity(Entity& entity) {
-	setExperience(getExperience() + entity.getExperience());	//add experience for killing an entity
+	if (type == EntityType::PLAYER) setExperience(getExperience() + entity.getExperience());	//add experience for killing an entity as player
 	if (entity.getType() == EntityType::ASTEROID) {				//increase kill counts
 		kills.killedAsteroids++;
 	}
@@ -35,7 +37,7 @@ void Entity::killEntity(Entity& entity) {
 	entity.enableDeleteEntity(); //mark entity for deletion, if it is not already marked
 }
 
-Entity* Entity::getThisEntity() const{
+Entity* Entity::getThisEntity() const {
 	return const_cast<Entity*>(this);
 }
 //Position
@@ -45,7 +47,7 @@ Vector3 Entity::getPosition() const {
 void Entity::setPosition(Vector3 newposition) {
 	position = newposition;
 }
-void Entity::setPosition_X(float x){
+void Entity::setPosition_X(float x) {
 	position.x = x;
 }
 void Entity::setPosition_Y(float y) {

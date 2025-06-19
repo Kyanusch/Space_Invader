@@ -3,8 +3,7 @@
 #include "raylib.h"
 #include "Entity.h"
 
-class spaceship	: public Entity{
+class spaceship : public Entity {
 public:
 	spaceship();
 };
-

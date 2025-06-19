@@ -1,6 +1,6 @@
 #include "Projectile.h"
 
-Projectile::Projectile(Vector3 position, Vector3 velocity,int health, int shield, int damage, Entity* owner,const char* hitsoundpath) :
+Projectile::Projectile(Vector3 position, Vector3 velocity, int health, int shield, int damage, Entity* owner, const char* hitsoundpath) :
 	Entity(position, velocity, health, shield, 0, PROJECTILE), damage(damage), owner(owner) {
 	if (hitsoundpath != nullptr) hitsound = LoadSound(hitsoundpath);
 }
@@ -15,4 +15,7 @@ void Projectile::doDamage(Entity& entity) {
 		owner->killEntity(entity); //if entity was killed, call killEntity function
 	}
 	enableDeleteEntity();
+}
+Entity* Projectile::getOwner() const {
+	return owner;
 }

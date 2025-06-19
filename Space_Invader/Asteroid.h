@@ -3,11 +3,11 @@
 #include <random>
 #include "entity.h"
 #include "raylib.h"
-class Asteroid : public Entity{
+class Asteroid : public Entity {
 private:
 	Vector3 target;
 	float spawnPos[2];
-	const Vector3 spinAxis = {GetRandomValue(-100, 100) / 100.0f, GetRandomValue(-100, 100) / 100.0f, GetRandomValue(-100, 100) / 100.0f};
+	const Vector3 spinAxis = { GetRandomValue(-100, 100) / 100.0f, GetRandomValue(-100, 100) / 100.0f, GetRandomValue(-100, 100) / 100.0f };
 	float rotation = 0.0f;
 	float spinVelocity;
 	float size = 30;
@@ -26,6 +26,4 @@ public:
 	virtual ~Asteroid();
 	void Update() override;
 	void draw() const;
-	
 };
-
