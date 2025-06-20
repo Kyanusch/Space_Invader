@@ -77,6 +77,8 @@ int main() {
             ui.drawGameOverScreen(gamestatus);
             break;
         case UI::newGame: {
+			score2LevelUp = 1000; // reset score needed to level up
+			Level = 1; // reset level to 1
             Gameround* oldGame = currentGame;
 			currentGame = new Gameround(0, 10.0f, ui.inputPlayernameScreen(oldGame->getPlayer()->name)); // Create a new game instance with the player's name
 			currentGame->spawnEnemy(); // Spawn enemy at the start 

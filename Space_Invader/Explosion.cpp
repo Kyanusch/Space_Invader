@@ -13,6 +13,7 @@ Explosion::Explosion(Vector3 position, Vector3 velocity, int size, int deathtime
 		}
 		particals.push_back(Worldpoint(position, vel.vec, rdmColor));
 	}
+	// stereo sound
 	sound = LoadSoundFromWave(Soundmanager::sounds.explosion);
 	auto results = virtualCamera::projectPoint(getPosition());	// get relative position of explosion to camera
 	SetSoundVolume(sound, 1 / (1 + results.distance / 100)); // set sound volume based on distance and size
@@ -26,7 +27,7 @@ void Explosion::Update() {
 	auto results = virtualCamera::projectPoint(getPosition());	// get relative position of explosion to camera
 	SetSoundVolume(sound, 1 / (1 + results.distance / 100)); // set sound volume based on distance and size
 	SetSoundPan(sound, ((virtualCamera::worldWidth - results.position2D.x) / virtualCamera::worldWidth)); // set sound pan based on relative position
-	if (deathtime < lifetime) enableDeleteEntity();
+	if (deathtime < lifetime) enableDeleteEntity();	// delete explosion after deathtime
 	for (auto& p : particals) {
 		p.Update();
 	}

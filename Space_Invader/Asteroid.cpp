@@ -16,14 +16,11 @@ Asteroid::Asteroid(Vector3 position, int health, float speed)
 Asteroid::~Asteroid() = default;
 
 void Asteroid::Update() {
-	if (getPosition().z < 50.0f - virtualCamera::focalLenght) {
+	if (getPosition().z < 50.0f - virtualCamera::focalLenght) { //if asteroid is too close to the camera (fixes glitching)
 		Entity::enableDeleteEntity();
 	}
-	setPosition_X(getPosition().x + getVelocity().x);
-	setPosition_Y(getPosition().y + getVelocity().y);
-	setPosition_Z(getPosition().z + getVelocity().z);
-	hitboxradius = size;
-	if (rotation < (2 * PI)) rotation += spinVelocity;
+	updatePosition();
+	if (rotation < (2 * PI)) rotation += spinVelocity; //increase rotation
 	else rotation = 0;
 }
 
@@ -46,14 +43,14 @@ void Asteroid::draw() const {
 	for (auto& p : Points3) {
 		p = virtualCamera::rotatePointAroundAxis(p, spinAxis, rotation);
 	}
-
+	// Project points to 2D
 	Vector2 Points2[4];
 	auto pos = virtualCamera::sVector3(getPosition());
 	for (int i = 0; i < 4; i++) {
 		Points3[i] = Points3[i] * size + pos;
 		Points2[i] = virtualCamera::projectPoint(Points3[i].vec).position2D;
 	}
-
+	// Draw lines between 2D points
 	Color color = { 138,124, cblue,transparency() };
 	DrawLine(Points2[0].x, Points2[0].y, Points2[1].x, Points2[1].y, color);
 	DrawLine(Points2[1].x, Points2[1].y, Points2[2].x, Points2[2].y, color);

@@ -36,7 +36,7 @@ void Enemy::Update() {
     virtualCamera::sVector3 newVelocity = toTarget * speed;
     setVelosity(newVelocity.vec);
 
-    // Update position
+	// Update position  (we had also the possibility to use Entity::updatePosition() here but never mind)
 	virtualCamera::sVector3 newPos = pos + newVelocity;
     
     setPosition(newPos.vec);
@@ -105,68 +105,7 @@ void Enemy::draw() const {
     for (int i = 0; i < 6; i++) {
         DrawLine(Points2[i].x, Points2[i].y, Points2[6].x, Points2[6].y, WHITE);
     }
-    //// Calculate orientation: sum of movement direction and direction to target
-    //Vector3 v = getVelocity();
-    //virtualCamera::sVector3 moveDir(v);
-    //virtualCamera::sVector3 toTarget;
-    //if (targetEntity) {
-    //    Vector3 t = targetEntity->getPosition();
-    //    Vector3 p = getPosition();
-    //    toTarget = virtualCamera::sVector3({t.x - p.x, t.y - p.y, t.z - p.z});
-    //} else {
-    //    toTarget = virtualCamera::sVector3({0, 0, 1});
-    //}
-    //virtualCamera::sVector3 orientation = moveDir + toTarget;
-    //orientation = virtualCamera::normalize(orientation);
-
-    //// Use rotatePointAroundAxis to orient the model
-    //// Main body (sphere wireframe)
-    //virtualCamera::sVector3 center(getPosition());
-    //float bodyRadius = 50.0f;
-
-    //// Draw cockpit sphere wireframe (8 points)
-    //for (int i = 0; i < 8; ++i) {
-    //    float angle1 = (float)i / 8.0f * 2.0f * 3.1415926f;
-    //    float angle2 = (float)(i+1) / 8.0f * 2.0f * 3.1415926f;
-    //    virtualCamera::sVector3 p1 = center + (orientation * bodyRadius);
-    //    virtualCamera::sVector3 p2 = center + (orientation * bodyRadius);
-    //    // Rotate around Y axis for the ring
-    //    p1 = virtualCamera::rotatePointAroundAxis(p1 - center, Vector3{0,1,0}, angle1) + center;
-    //    p2 = virtualCamera::rotatePointAroundAxis(p2 - center, Vector3{0,1,0}, angle2) + center;
-    //    // Project and draw line
-    //    auto res1 = virtualCamera::projectPoint(p1.vec);
-    //    auto res2 = virtualCamera::projectPoint(p2.vec);
-    //    if (res1.inView && res2.inView) {
-    //        DrawLine((int)res1.position2D.x, (int)res1.position2D.y, (int)res2.position2D.x, (int)res2.position2D.y, BLUE);
-    //    }
-    //}
-
-    //// Draw wings (vertical rectangles, TIE-Fighter style)
-    //float wingOffset = 70.0f;
-    //float wingHeight = 100.0f;
-    //float wingDepth = 50.0f;
-
-    //for (int side = -1; side <= 1; side += 2) {
-    //    Vector3 baseVec = getPosition();
-    //    baseVec.x += wingOffset * side;
-    //    virtualCamera::sVector3 base(baseVec);
-    //    virtualCamera::sVector3 top(baseVec); top.vec.y += wingHeight/2;
-    //    virtualCamera::sVector3 bottom(baseVec); bottom.vec.y -= wingHeight/2;
-    //    virtualCamera::sVector3 frontTop = top + (orientation * (wingDepth/2));
-    //    virtualCamera::sVector3 frontBottom = bottom + (orientation * (wingDepth/2));
-    //    virtualCamera::sVector3 backTop = top - (orientation * (wingDepth/2));
-    //    virtualCamera::sVector3 backBottom = bottom - (orientation * (wingDepth/2));
-
-    //    auto p1 = virtualCamera::projectPoint(frontTop.vec);
-    //    auto p2 = virtualCamera::projectPoint(frontBottom.vec);
-    //    auto p3 = virtualCamera::projectPoint(backTop.vec);
-    //    auto p4 = virtualCamera::projectPoint(backBottom.vec);
-
-    //    if (p1.inView && p2.inView) DrawLine((int)p1.position2D.x, (int)p1.position2D.y, (int)p2.position2D.x, (int)p2.position2D.y, BLUE);
-    //    if (p3.inView && p4.inView) DrawLine((int)p3.position2D.x, (int)p3.position2D.y, (int)p4.position2D.x, (int)p4.position2D.y, BLUE);
-    //    if (p1.inView && p3.inView) DrawLine((int)p1.position2D.x, (int)p1.position2D.y, (int)p3.position2D.x, (int)p3.position2D.y, BLUE);
-    //    if (p2.inView && p4.inView) DrawLine((int)p2.position2D.x, (int)p2.position2D.y, (int)p4.position2D.x, (int)p4.position2D.y, BLUE);
-    //}
+   
 }
 
 void Enemy::setTarget(Entity* target) {

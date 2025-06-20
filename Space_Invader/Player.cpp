@@ -64,7 +64,7 @@ Bullet Player::Shoot() const {
 }
 
 void Player::draw() const {
-	virtualCamera::sVector3 Points3[7] = {
+	virtualCamera::sVector3 Points3[7] = {	//design of the player ship
 		virtualCamera::sVector3({-20,0,0}),
 		virtualCamera::sVector3({0,5,0}),
 		virtualCamera::sVector3({ 20,0,0 }),
@@ -82,12 +82,14 @@ void Player::draw() const {
 		p = virtualCamera::rotatePointAroundAxis(p, { -1.0f,0.0f,0.0f }, getVelocity().y / (2.5 * PI));
 	}
 
+	// Project points to 2D
 	Vector2 Points2[7];
 	auto pos = virtualCamera::sVector3(getPosition());
 	for (int i = 0; i < 7; i++) {
 		Points3[i] = Points3[i] + pos;
 		Points2[i] = virtualCamera::projectPoint(Points3[i].vec).position2D;
 	}
+	// Draw lines between 2D points
 	DrawLine(Points2[0].x, Points2[0].y, Points2[1].x, Points2[1].y, RAYWHITE);
 	DrawLine(Points2[1].x, Points2[1].y, Points2[2].x, Points2[2].y, RAYWHITE);
 	DrawLine(Points2[2].x, Points2[2].y, Points2[3].x, Points2[3].y, RAYWHITE);

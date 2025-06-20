@@ -339,6 +339,7 @@ void UI::drawGameOverScreen(gamestate& gamestatus) {
 	// Handle input
 	if (IsKeyPressed(KEY_ENTER)) {
 		HighscoreManager::addScore({ game->getPlayer()->name, playerScore }); // Add score to highscore list
+		HighscoreManager::updateHighscores(); // Save highscores
 		gamestatus = mainmenu;
 	}
 }

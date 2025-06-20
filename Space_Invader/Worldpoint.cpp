@@ -2,7 +2,7 @@
 
 Worldpoint::Worldpoint(Vector3 position, Vector3 velocity, Color color) : Entity(position, velocity, 1, 0, 0), color(color) {}
 Worldpoint::Worldpoint(Vector3 position, Color color) : Entity(position, { 0.0f,0.0f,0.0f }, 1, 0, 0, WORLDPOINT), color(color) {
-	staticMode = true;
+	staticMode = true;	// static mode means that the Worldoint does not move
 }
 
 void Worldpoint::draw() const {
@@ -11,5 +11,5 @@ void Worldpoint::draw() const {
 	else if (results.inView) DrawCircle(results.position2D.x, results.position2D.y, 1500 / results.distance + 0.5f, color);
 }
 void Worldpoint::Update() {
-	updatePosition();
+	if (!staticMode) updatePosition(); // if not in static mode, update the position
 };

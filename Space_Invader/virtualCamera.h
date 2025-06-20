@@ -33,7 +33,7 @@ namespace virtualCamera {
 	extern sVector3 right;		//camera direction of right
 	extern float focalLenght;	//defines the zoom
 
-	void initialize(const Vector3& pPosition, const Vector3& pTarget, const Vector3& pWorldUp, float pFocalLenght);
+	void initialize(const Vector3& pPosition, const Vector3& pTarget, const Vector3& pWorldUp, float pFocalLenght);	// must be called before using the camera
 	camResults projectPoint(const Vector3& point);
 	sVector3 rotatePointAroundAxis(const sVector3& pPoint, const Vector3& axis, float angleRadians);
 }

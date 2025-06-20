@@ -47,7 +47,7 @@ public:
 	int getHealth();
 	int getShield();
 	void setShield(int newShield);
-	virtual void damage(int damage);
+	virtual void damage(int damage); //damages this entity
 	int getExperience();
 	virtual void setExperience(int exp);
 	killCounts getKillCounts();
@@ -55,8 +55,8 @@ public:
 
 	void killEntity(Entity& entity);
 	EntityType getType() const;
-	void enableDeleteEntity();
-	bool getEnableDelete();
+	void enableDeleteEntity();	//sets enableDelete to true, so entity is "dead"
+	bool getEnableDelete();		// returns true if entity is "dead"
 private:
 	Vector3	position;
 	Vector3 velocity;

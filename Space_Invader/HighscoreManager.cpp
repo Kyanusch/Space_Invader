@@ -8,10 +8,8 @@ namespace HighscoreManager {
 	std::vector<score> highscores;
 
 	void loadHighscores() {
-		highscores.clear();
 		std::ifstream file(HIGHSCORE_FILE);
-
-		if (!file) {
+		if (!file) { // Error handling for file not found
 			std::cerr << "INFO: HighscoreManager: High score file not found. New file will be created.\n";
 			std::ofstream newFile(HIGHSCORE_FILE);
 			if (!newFile) {
@@ -19,7 +17,10 @@ namespace HighscoreManager {
 			}
 			return;
 		}
-
+		
+		highscores.clear(); // Clear current highscore list
+		
+		// read & save scores from file
 		std::string name;
 		int value;
 		while (file >> name >> value) {
@@ -37,6 +38,7 @@ namespace HighscoreManager {
 			return b.value < a.value;
 			});
 
+		// Limit the number of highscores to MAX_HIGHSCORES
 		if (highscores.size() > MAX_HIGHSCORES) {
 			highscores.resize(MAX_HIGHSCORES);
 		}
@@ -49,7 +51,7 @@ namespace HighscoreManager {
 			return;
 		}
 
-		for (const auto& entry : highscores) {
+		for (const auto& entry : highscores) {	// save each score to the file
 			file << entry.name << " " << entry.value << "\n";
 		}
 
@@ -80,7 +82,7 @@ namespace HighscoreManager {
 			return b.value < a.value;
 			});
 
-		if (highscores.size() > MAX_HIGHSCORES) {
+		if (highscores.size() > MAX_HIGHSCORES) { // Limit the number of highscores
 			highscores.resize(MAX_HIGHSCORES);
 		}
 	}
