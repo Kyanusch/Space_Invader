@@ -63,17 +63,19 @@ bool Enemy::hasReachedTarget() const {
 }
 
 void Enemy::draw() const {
-    virtualCamera::sVector3 Points3[7] = {
-        virtualCamera::sVector3({-20,0,0}),
-        virtualCamera::sVector3({0,5,0}),
-        virtualCamera::sVector3({ 20,0,0 }),
-        virtualCamera::sVector3({ 0,-12,0 }),
-        virtualCamera::sVector3({ -53,0,0 }),
-        virtualCamera::sVector3({ 53,0,0 }),
-        virtualCamera::sVector3({ 0,0,-40 })
+    virtualCamera::sVector3 Points3[9] = {
+        virtualCamera::sVector3({25,15,0}),
+        virtualCamera::sVector3({-25,15,0}),
+        virtualCamera::sVector3({ 25,-15,0 }),
+        virtualCamera::sVector3({ -25,-15,0 }),
+        virtualCamera::sVector3({15,8,-40}),
+        virtualCamera::sVector3({-15,8,-40}),
+        virtualCamera::sVector3({ 15,-8,-40 }),
+        virtualCamera::sVector3({ -15,-8,-40 }),
+		virtualCamera::sVector3({ 0,0,-1 })
     };
     /*for (auto& p : Points3) {
-        p.vec.z *= -1 ;
+        p = p * 5;
     }*/
     Vector3 targetPosition = targetEntity->getPosition();
     virtualCamera::sVector3 toTarget = virtualCamera::sVector3(targetPosition) - virtualCamera::sVector3(getPosition());
@@ -89,21 +91,22 @@ void Enemy::draw() const {
         p = virtualCamera::rotatePointAroundAxis(p, { -1.0f,0.0f,0.0f }, pitchAngle);
     }
  
-    Vector2 Points2[7];
+    Vector2 Points2[9];
     auto pos = virtualCamera::sVector3(getPosition());
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 9; i++) {
         Points3[i] = Points3[i] + pos;
         Points2[i] = virtualCamera::projectPoint(Points3[i].vec).position2D;
     }
 
-    DrawLine(Points2[0].x, Points2[0].y, Points2[1].x, Points2[1].y, RAYWHITE);
-    DrawLine(Points2[1].x, Points2[1].y, Points2[2].x, Points2[2].y, RAYWHITE);
-    DrawLine(Points2[2].x, Points2[2].y, Points2[3].x, Points2[3].y, RAYWHITE);
-    DrawLine(Points2[3].x, Points2[3].y, Points2[0].x, Points2[0].y, RAYWHITE);
-    DrawLine(Points2[0].x, Points2[0].y, Points2[4].x, Points2[4].y, RAYWHITE);
-    DrawLine(Points2[2].x, Points2[2].y, Points2[5].x, Points2[5].y, RAYWHITE);
-    for (int i = 0; i < 6; i++) {
-        DrawLine(Points2[i].x, Points2[i].y, Points2[6].x, Points2[6].y, WHITE);
+    DrawLine(Points2[0].x, Points2[0].y, Points2[3].x, Points2[3].y, GRAY);
+    DrawLine(Points2[1].x, Points2[1].y, Points2[2].x, Points2[2].y, GRAY);
+
+    DrawLine(Points2[0].x, Points2[0].y, Points2[4].x, Points2[4].y, WHITE);
+    DrawLine(Points2[1].x, Points2[1].y, Points2[5].x, Points2[5].y, WHITE);
+    DrawLine(Points2[2].x, Points2[2].y, Points2[6].x, Points2[6].y, WHITE);
+    DrawLine(Points2[3].x, Points2[3].y, Points2[7].x, Points2[7].y, WHITE);
+    for (int i = 4; i < 8; i++) {
+        DrawLine(Points2[i].x, Points2[i].y, Points2[8].x, Points2[8].y, VIOLET);
     }
    
 }
